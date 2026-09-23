@@ -1,0 +1,142 @@
+---
+import '@fontsource/iosevka-aile/400.css';
+import '@fontsource/iosevka-aile/400-italic.css';
+import '@fontsource/iosevka-aile/500.css';
+import '@fontsource/iosevka-aile/600.css';
+import '@fontsource/iosevka/300.css';
+import '@fontsource/iosevka/400.css';
+import '@fontsource/iosevka/500.css';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../site.config';
+import { url } from '../utils';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  type?: 'website' | 'article';
+  loader?: boolean;
+}
+
+const { title, description = site.description, image, canonical, type = 'website', loader = false } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name}` : site.title;
+const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href={url('/rss.xml')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    {loader && (
+      <div class="boot" id="boot" aria-hidden="true">
+        <div class="boot-inner mono">
+          <div>{site.shortName} {site.version}</div>
+          <div class="boot-muted">Loading ...</div>
+          <div class="boot-muted">Hunts, Posts, Priors</div>
+          <div class="boot-pct"><span id="boot-n">0</span>%</div>
+        </div>
+      </div>
+    )}
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Fade elements in as they scroll into view.
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
+        { rootMargin: '0px 0px -8% 0px' }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Labels "decode" from noise glyphs when they scroll into view.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const GLYPHS = '01#%*+=<>/';
+        const decode = (el: HTMLElement) => {
+          const text = el.textContent ?? '';
+          el.setAttribute('aria-label', text);
+          const start = performance.now();
+          const dur = 250 + text.length * 35;
+          const tick = (now: number) => {
+            const p = Math.min(1, (now - start) / dur);
+            const solved = Math.floor(p * text.length);
+            el.textContent = [...text]
+              .map((c, i) => (i < solved || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
+              .join('');
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        const dio = new IntersectionObserver((entries) =>
+          entries.forEach((e) => e.isIntersecting && (decode(e.target as HTMLElement), dio.unobserve(e.target)))
+        );
+        document.querySelectorAll('[data-decode]').forEach((el) => dio.observe(el));
+      }
+
+      // Boot counter — only once per session, skipped for reduced motion.
+      const boot = document.getElementById('boot');
+      if (boot) {
+        let seen = false;
+        try { seen = sessionStorage.getItem('booted') === '1'; sessionStorage.setItem('booted', '1'); } catch {}
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finish = () => { boot.classList.add('done'); setTimeout(() => boot.remove(), 500); };
+        if (seen || reduced || location.search.includes('noboot')) {
+          boot.remove();
+        } else {
+          // Never trap the page behind the loader if animation frames stall.
+          const failsafe = setTimeout(finish, 1600);
+          const n = document.getElementById('boot-n')!;
+          const start = performance.now();
+          const dur = 900;
+          const tick = (t: number) => {
+            const p = Math.min(1, (t - start) / dur);
+            n.textContent = String(Math.round(p * p * 100));
+            if (p < 1) requestAnimationFrame(tick);
+            else { clearTimeout(failsafe); finish(); }
+          };
+          requestAnimationFrame(tick);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg);
+    display: grid;
+    place-items: center;
+    transition: opacity 0.45s ease, visibility 0.45s;
+  }
+  .boot.done { opacity: 0; visibility: hidden; }
+  .boot-inner { font-size: 13px; line-height: 1.7; min-width: 200px; }
+  .boot-muted { color: var(--muted); }
+  .boot-pct { font-size: 44px; font-weight: 300; margin-top: 12px; letter-spacing: -0.01em; }
+  main { display: block; }
+</style>

@@ -1,0 +1,46 @@
+---
+import { site } from '../site.config';
+import { url, b64 } from '../utils';
+import NoiseCanvas from './NoiseCanvas.astro';
+
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap foot">
+    <a class="band" href={`mailto:${site.email}`}>
+      <NoiseCanvas />
+      <span class="mono band-k">∵ ⩆ open to conversations</span>
+      <span class="band-t">Hunts, detections, probability — say hello <span class="arrow">→</span></span>
+    </a>
+    <p class="b64 mono" aria-hidden="true">{b64(`${site.name} — ${site.hero.kicker}`)}</p>
+    <div class="row">
+      <div class="left">
+        <a href={url('/')} class="name">{site.name} © {year}</a>
+        <a class="mono link-u mail" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <ul class="socials">
+        {site.socials.map((s) => (
+          <li><a class="link-u" href={s.href} target="_blank" rel="noopener me">{s.label}</a></li>
+        ))}
+        <li><a class="link-u" href={url('/rss.xml')}>RSS</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { padding: 8px 0 28px; }
+  .foot { display: grid; gap: 16px; max-width: 1040px; }
+  .band { position: relative; overflow: hidden; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 16px 20px; border-radius: var(--radius); background: var(--panel); color: var(--panel-ink); }
+  .band > :not(canvas) { position: relative; z-index: 1; }
+  .band-k { font-size: 11px; color: var(--accent-soft); }
+  .band-t { font-weight: 500; letter-spacing: -0.01em; }
+  .band .arrow { display: inline-block; transition: transform 0.2s; }
+  .band:hover .arrow { transform: translateX(4px); }
+  .b64 { font-size: 11px; color: var(--muted); word-break: break-all; opacity: 0.7; }
+  .row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+  .left { display: grid; gap: 6px; }
+  .name { font-weight: 600; font-size: 14px; }
+  .mail { font-size: 13px; color: var(--muted); justify-self: start; }
+  .socials { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 0; font-size: 13px; }
+</style>

@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { site } from '../../site.config';
+import { url, getFolders } from '../../utils';
+
+const folders = await getFolders();
+const total = folders.reduce((n, f) => n + f.posts.length, 0);
+---
+<Base title="Writing" description={`Writing by ${site.name}: ${site.writing.map((f) => f.title).join(' and ')}.`}>
+  <div class="wrap page">
+    <header class="head">
+      <span class="label" data-decode>research & writing</span>
+      <h1>Writing</h1>
+      <p>{total} {total === 1 ? 'post' : 'posts'} in {folders.length} folders.</p>
+
+      <pre class="tree mono" aria-label="Folders">writing/
+{folders.map((f, i) => (
+  <>{i === folders.length - 1 ? '└── ' : '├── '}<a class="link-u" href={url(`/blog/${f.folder.slug}/`)}>{f.folder.slug}/</a> <span class="count">{f.posts.length}</span>{'\n'}</>
+))}</pre>
+    </header>
+
+    {folders.map(({ folder, posts }, i) => (
+      <section id={folder.slug}>
+        <h2>
+          <span class="num mono">{String(i + 1).padStart(2, '0')}</span>
+          <a class="link-u" href={url(`/blog/${folder.slug}/`)}>{folder.title}</a>
+          {folder.short && <span class="chip keep-case">{folder.short}</span>}
+        </h2>
+        <p class="desc">{folder.description}</p>
+        {posts.length ? <PostList posts={posts} numbered={folder.series} /> : <p class="mono empty">∵ first post coming soon.</p>}
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .page { max-width: 860px; padding-top: 40px; padding-bottom: 24px; }
+  .head { display: grid; gap: 10px; padding-bottom: 24px; margin-bottom: 28px; border-bottom: 1px dashed var(--line-strong); }
+  h1 { font-size: clamp(30px, 4.5vw, 40px); letter-spacing: -0.01em; }
+  .head > p { color: var(--ink-soft); font-size: 15px; }
+  .tree { margin: 6px 0 0; font-size: 13px; line-height: 1.7; }
+  .count { color: var(--muted); }
+  .page section { padding: 0 0 28px; margin-bottom: 28px; border-bottom: 1px dashed var(--line-strong); scroll-margin-top: 80px; }
+  .page section:last-child { border-bottom: 0; }
+  h2 { font-size: 20px; letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  h2 .chip { font-size: 10px; padding: 1px 6px; }
+  .num { font-size: 12px; font-weight: 400; color: var(--accent); }
+  .desc { color: var(--ink-soft); font-size: 14.5px; margin: 6px 0 16px; max-width: 680px; }
+  .empty { font-size: 12px; color: var(--muted); }
+</style>

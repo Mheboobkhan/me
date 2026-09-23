@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import LifeCanvas from '../components/LifeCanvas.astro';
+import GaussianCanvas from '../components/GaussianCanvas.astro';
+import { site } from '../site.config';
+import PostList from '../components/PostList.astro';
+import { url, getFolders } from '../utils';
+
+const folders = await getFolders();
+const gh = site.socials.find((s) => s.label === 'GitHub');
+const li = site.socials.find((s) => s.label === 'LinkedIn');
+---
+<Base>
+  <div class="wrap page">
+    <!-- ── Sidebar ─────────────────────────────────── -->
+    <aside class="side">
+      <figure class="fig-life">
+        <div class="life-box"><LifeCanvas framed cell={8} /></div>
+        <figcaption class="mono">fig. 0 — conway's life, live. hover to seed.</figcaption>
+      </figure>
+
+      <h1>{site.name}</h1>
+      <p class="role">{site.experience[0].role}<br /><span class="muted">{site.experience[0].org}</span></p>
+
+      <ul class="links mono">
+        <li><span>email</span><a class="link-u" href={`mailto:${site.email}`}>{site.email}</a></li>
+        {gh && <li><span>github</span><a class="link-u" href={gh.href} target="_blank" rel="noopener me">{gh.href.split('/').filter(Boolean).pop()}</a></li>}
+        {li && <li><span>linkedin</span><a class="link-u" href={li.href} target="_blank" rel="noopener me">in/{li.href.split('/').filter(Boolean).pop()}</a></li>}
+        <li><span>writing</span><span class="pair"><a class="link-u" href={url('/blog/')}>blog</a> · <a class="link-u" href={url('/rss.xml')}>rss</a></span></li>
+      </ul>
+
+      <dl class="kv">
+        {site.stats.map((s) => (
+          <div><dt class="mono">{s.label}</dt><dd>{s.value}</dd></div>
+        ))}
+      </dl>
+    </aside>
+
+    <!-- ── Main ────────────────────────────────────── -->
+    <div class="body">
+      <section id="about">
+        <h2><span class="num mono">§1</span> About</h2>
+        <p class="lede">{site.hero.sub}</p>
+        {site.about.map((p) => <p>{p}</p>)}
+
+        <dl class="interests">
+          {site.principles.map((pr, i) => (
+            <div>
+              <dt><span class:list={['label', ['', 'green', 'teal'][i % 3]]} data-decode>{pr.label}</span></dt>
+              <dd>{pr.body}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section id="experience">
+        <h2><span class="num mono">§2</span> Experience</h2>
+        <ol class="rows">
+          {site.experience.map((e) => (
+            <li>
+              <span class="mono date">{e.when}</span>
+              <div>
+                <p><strong>{e.role}</strong>, <span class="org">{e.org}</span></p>
+                {e.summary && <p class="note">{e.summary}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="work">
+        <h2><span class="num mono">§3</span> Selected work</h2>
+        <ol class="refs">
+          {site.projects.map((p: { name: string; tag: string; description: string; href?: string }, i) => (
+            <li>
+              <span class="mono ref">[{i + 1}]</span>
+              <div>
+                <p>
+                  {p.href ? <a class="title link-u" href={p.href} target="_blank" rel="noopener">{p.name}</a> : <strong class="title">{p.name}</strong>}
+                  <span class="chip">{p.tag}</span>
+                </p>
+                <p class="note">{p.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <figure class="fig-gauss">
+          <div class="gauss-box"><GaussianCanvas /></div>
+          <figcaption><span class="mono">fig. 1</span> — Galton board, live. Each particle takes 22 independent ±1 steps; by the central limit theorem the counts converge to N(μ, σ²) (dashed).</figcaption>
+        </figure>
+      </section>
+
+      <section id="writing">
+        <h2><span class="num mono">§4</span> Writing <a class="more mono link-u" href={url('/blog/')}>all posts →</a></h2>
+        {folders.map(({ folder, posts }) => (
+          <div class="folder">
+            <h3>
+              <a class="link-u" href={url(`/blog/${folder.slug}/`)}>{folder.title}</a>
+              {folder.short && <span class="chip keep-case">{folder.short}</span>}
+              <span class="mono fcount">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
+            </h3>
+            {posts.length ? (
+              <PostList posts={folder.series ? posts.slice(0, 5) : posts.slice(0, 4)} descriptions={false} numbered={folder.series} />
+            ) : (
+              <p class="note mono">∵ first post coming soon.</p>
+            )}
+            {!folder.series && posts.length > 4 && (
+              <a class="mono link-u fmore" href={url(`/blog/${folder.slug}/`)}>+ {posts.length - 4} more →</a>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <section id="toolkit">
+        <h2><span class="num mono">§5</span> Skills</h2>
+        <dl class="skills">
+          {site.skills.map((g) => (
+            <div>
+              <dt class="mono">{g.group}</dt>
+              <dd>{g.items.join(' · ')}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section id="credentials">
+        <h2><span class="num mono">§6</span> Credentials</h2>
+        <ul class="creds">
+          {site.credentials.map((c) => (
+            <li><span class="mono kind">{c.kind}</span><span>{c.name}</span></li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    padding-top: 40px;
+    padding-bottom: 24px;
+    max-width: 1040px;
+  }
+
+  /* Sidebar */
+  .side { position: sticky; top: 76px; align-self: start; display: grid; gap: 18px; }
+  .fig-life { margin: 0; display: grid; gap: 6px; }
+  .life-box { position: relative; height: 180px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--bg-soft); overflow: hidden; }
+  figcaption { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  h1 { font-size: 26px; letter-spacing: -0.01em; line-height: 1.1; }
+  .role { font-size: 15px; line-height: 1.4; margin-top: -8px; }
+  .muted { color: var(--muted); }
+  .links { list-style: none; margin: 0; padding: 12px 0; font-size: 12px; display: grid; gap: 6px; border-top: 1px dashed var(--line-strong); border-bottom: 1px dashed var(--line-strong); }
+  .links li { display: grid; grid-template-columns: 64px 1fr; gap: 8px; min-width: 0; }
+  .links li > span:first-child { color: var(--muted); }
+  .links a { overflow-wrap: anywhere; }
+  .kv { margin: 0; display: grid; gap: 10px; }
+  .kv div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .kv dt { font-size: 11px; color: var(--muted); }
+  .kv dd { margin: 0; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+
+  /* Main column */
+  .body { display: block; min-width: 0; font-size: 15.5px; line-height: 1.6; }
+  .body section { padding: 0 0 28px; margin-bottom: 28px; border-bottom: 1px dashed var(--line-strong); }
+  .body section:last-child { border-bottom: 0; margin-bottom: 0; }
+  .body section[id] { scroll-margin-top: 80px; }
+  h2 { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 14px; display: flex; align-items: baseline; gap: 10px; }
+  .num { font-size: 12px; font-weight: 400; color: var(--accent); letter-spacing: 0; }
+  h2 .more { margin-left: auto; font-size: 12px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+  .body p + p { margin-top: 10px; }
+  .lede { font-size: 17px; color: var(--ink); }
+  .body p:not(.lede):not(.note) { color: var(--ink-soft); }
+
+  .interests { margin: 18px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .interests dd { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
+
+  .rows, .refs { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .rows li, .refs li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; }
+  .refs li { grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .date, .ref { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+  .ref { color: var(--accent); }
+  .org { color: var(--ink-soft); }
+  .title { font-weight: 600; }
+  .note { font-size: 14px; color: var(--ink-soft); margin-top: 2px !important; line-height: 1.5; }
+  .refs .chip { margin-left: 8px; vertical-align: 2px; font-size: 10px; padding: 1px 6px; }
+  .folder + .folder { margin-top: 22px; }
+  h3 { font-size: 15px; letter-spacing: 0; margin: 0 0 10px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  h3 .chip { font-size: 10px; padding: 1px 6px; }
+  .fcount { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: auto; }
+  .fmore { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+  .fig-gauss { margin: 22px 0 0; display: grid; gap: 8px; }
+  .gauss-box { height: 210px; border: 1px dashed var(--line-strong); border-radius: var(--radius); background: var(--bg-soft); overflow: hidden; }
+  .fig-gauss figcaption { font-family: var(--font-sans); font-size: 13px; }
+  .fig-gauss figcaption .mono { color: var(--accent); }
+
+  .skills { margin: 0; display: grid; gap: 10px; }
+  .skills div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; }
+  .skills dt { font-size: 12px; color: var(--accent); }
+  .skills dd { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+  .creds { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .creds li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; font-size: 14.5px; }
+  .kind { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 820px) {
+    .page { grid-template-columns: 1fr; padding-top: 24px; }
+    .side { position: static; }
+    .interests { grid-template-columns: 1fr; gap: 12px; }
+  }
+  @media (max-width: 520px) {
+    .rows li, .skills div, .creds li { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

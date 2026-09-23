@@ -1,0 +1,146 @@
+---
+// Central limit theorem, live: particles take ±1 steps through rows of pegs and
+// pile up into a normal distribution. The dashed line is the ideal bell curve.
+---
+<canvas class="gauss" aria-hidden="true"></canvas>
+
+<script>
+  import { mountCanvas, cssVar } from '../scripts/canvas';
+
+  const ROWS = 22;
+  const BIN = 6;
+  const TARGET_N = 2400;
+  const SPAWN_PER_SEC = 220;
+
+  document.querySelectorAll<HTMLCanvasElement>('canvas.gauss').forEach((canvas) => {
+    type P = { x: number; y: number; row: number };
+    let parts: P[] = [];
+    let bins = new Float32Array(0);
+    let n = 0;
+    let spawnAcc = 0;
+    let fade = 1;
+    let resetting = false;
+    let step = 0;
+    let sigma = 0;
+    let top = 0;
+    let histTop = 0;
+    let rowGap = 0;
+
+    const reset = () => { bins.fill(0); n = 0; parts = []; };
+
+    mountCanvas(canvas, {
+      fps: 45,
+      stillFrames: 900,
+      resize: ({ w, h }) => {
+        bins = new Float32Array(Math.ceil(w / BIN));
+        top = 34;
+        histTop = h * 0.52;
+        rowGap = (histTop - top - 12) / ROWS;
+        // After ROWS ±step moves, σ = step·√ROWS. Aim for ±3σ ≈ 84% of the width.
+        // Landing adds uniform jitter over one lattice cell (variance step²/3) so
+        // every bin fills instead of only the reachable lattice points.
+        step = (w * 0.14) / Math.sqrt(ROWS);
+        sigma = step * Math.sqrt(ROWS + 1 / 3);
+        reset();
+      },
+      frame: ({ ctx, w, h, dt }) => {
+        const ink = cssVar('--ink');
+        const muted = cssVar('--muted');
+        const accent = cssVar('--accent');
+        const cx = w / 2;
+        const histH = h - histTop - 8;
+        const binW = w / bins.length;
+        const peak = (TARGET_N * binW) / (sigma * Math.sqrt(2 * Math.PI));
+        const unit = (histH * 0.78) / peak;
+
+        // Simulate
+        if (!resetting) {
+          spawnAcc += SPAWN_PER_SEC * dt;
+          while (spawnAcc >= 1 && n + parts.length < TARGET_N) {
+            parts.push({ x: cx, y: top - Math.random() * 20, row: 0 });
+            spawnAcc--;
+          }
+        }
+        const vy = (histTop - top) * 1.1 * dt;
+        parts = parts.filter((p) => {
+          p.y += vy;
+          while (p.row < ROWS && p.y >= top + (p.row + 1) * rowGap) {
+            p.x += Math.random() < 0.5 ? -step : step;
+            p.row++;
+          }
+          if (p.y >= histTop) {
+            const b = Math.floor((p.x + (Math.random() * 2 - 1) * step) / binW);
+            if (b >= 0 && b < bins.length) bins[b]++;
+            n++;
+            return false;
+          }
+          return true;
+        });
+        if (n >= TARGET_N && !parts.length) resetting = true;
+        if (resetting) {
+          fade -= dt * 1.2;
+          if (fade <= 0) { reset(); fade = 1; resetting = false; }
+        }
+
+        // Draw
+        ctx.clearRect(0, 0, w, h);
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = muted;
+        ctx.font = '11px Iosevka, ui-monospace, monospace';
+        ctx.textBaseline = 'top';
+        ctx.fillText(`[clt] N(μ, σ²)`, 14, 12);
+        const label = `n = ${String(n).padStart(4, '0')}`;
+        ctx.fillText(label, w - 14 - ctx.measureText(label).width, 12);
+
+        // Pegs
+        ctx.globalAlpha = 0.28;
+        for (let r = 1; r <= ROWS; r++) {
+          const y = top + r * rowGap;
+          const span = r <= 14 ? r : 14 + (r % 2);
+          for (let k = -span; k <= span; k += 2) ctx.fillRect(cx + k * step - 0.5, y - 0.5, 1, 1);
+        }
+
+        // Falling particles
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = accent;
+        for (const p of parts) ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
+
+        // Histogram
+        ctx.globalAlpha = fade;
+        ctx.fillStyle = ink;
+        for (let b = 0; b < bins.length; b++) {
+          if (!bins[b]) continue;
+          const bh = bins[b] * unit;
+          ctx.fillRect(b * binW + 1, h - 8 - bh, binW - 2, bh);
+        }
+
+        // Ideal curve for the current n
+        if (n > 40) {
+          const scale = (n * binW) / (sigma * Math.sqrt(2 * Math.PI)) * unit;
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          for (let x = 0; x <= w; x += 3) {
+            const z = (x - cx) / sigma;
+            const y = h - 8 - scale * Math.exp(-0.5 * z * z);
+            x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Baseline
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = muted;
+        ctx.fillRect(0, h - 8, w, 1);
+        ctx.globalAlpha = 1;
+      },
+    });
+  });
+</script>
+
+<style>
+  .gauss { display: block; width: 100%; height: 100%; }
+</style>

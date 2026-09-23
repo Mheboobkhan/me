@@ -1,0 +1,124 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Divider from '../../components/Divider.astro';
+import { site } from '../../site.config';
+import { url, getFolders, formatDate, readingTime } from '../../utils';
+
+export async function getStaticPaths() {
+  const folders = await getFolders();
+  // Prev/next stay inside the post's folder. Series run oldest → newest.
+  return folders.flatMap(({ folder, posts }) =>
+    posts.map((post, i) => ({
+      params: { slug: post.id },
+      props: {
+        post,
+        folder,
+        part: folder.series ? i + 1 : undefined,
+        prev: folder.series ? posts[i - 1] : posts[i + 1],
+        next: folder.series ? posts[i + 1] : posts[i - 1],
+      },
+    }))
+  );
+}
+
+const { post, folder, part, prev, next } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+---
+<Base
+  title={d.title}
+  description={d.description}
+  image={d.heroImage?.src}
+  type="article"
+>
+  <article>
+    <header class="wrap post-head">
+      <nav class="mono back" aria-label="Breadcrumb">
+        <a class="link-u" href={url('/blog/')}>writing</a> / <a class="link-u" href={url(`/blog/${folder.slug}/`)}>{folder.slug}</a>
+      </nav>
+      <div class="meta">
+        <span class="label keep-case">{folder.short ?? folder.title}{part && ` · part ${part}`}</span>
+        <span class="mono">{formatDate(d.pubDate)}</span>
+        <span class="mono">{readingTime(post.body)} min read</span>
+      </div>
+      <h1>{d.title}</h1>
+      {d.description && <p class="lede">{d.description}</p>}
+    </header>
+
+    {d.heroImage && (
+      <div class="wrap hero-img"><Image src={d.heroImage} alt="" widths={[720, 1000, 1600]} sizes="(max-width: 1000px) 100vw, 1000px" loading="eager" /></div>
+    )}
+
+    <div class="wrap">
+      <div class="prose">
+        <Content />
+      </div>
+      {d.tags.length > 0 && (
+        <div class="tags">{d.tags.map((t) => <span class="chip">{t}</span>)}</div>
+      )}
+      {d.originalURL && (
+        <p class="mono origin">Originally published on <a class="link-u" href={d.originalURL} target="_blank" rel="noopener">Medium</a>.</p>
+      )}
+    </div>
+  </article>
+
+  {(prev || next) && <Divider />}
+
+  {(prev || next) && <nav class="wrap pager" aria-label={`More in ${folder.title}`}>
+    {prev ? (
+      <a href={url(`/blog/${prev.id}/`)}><span class="mono">← {folder.series ? 'previous part' : 'older'}</span><span>{prev.data.title}</span></a>
+    ) : <span />}
+    {next ? (
+      <a class="r" href={url(`/blog/${next.id}/`)}><span class="mono">{folder.series ? 'next part' : 'newer'} →</span><span>{next.data.title}</span></a>
+    ) : <span />}
+  </nav>}
+</Base>
+
+<style>
+  .post-head { max-width: calc(720px + 2 * var(--gutter)); display: grid; gap: 14px; padding-top: clamp(28px, 5vw, 56px); padding-bottom: 24px; }
+  .back { font-size: 12px; color: var(--muted); }
+  .back:hover { color: var(--accent); }
+  .meta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 12px; color: var(--muted); }
+  h1 { font-size: clamp(30px, 4.5vw, 44px); letter-spacing: -0.01em; line-height: 1.05; }
+  .lede { font-size: clamp(16px, 2vw, 19px); color: var(--ink-soft); }
+  .hero-img { max-width: 1000px; margin-bottom: 24px; }
+  .hero-img img { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); }
+
+  .tags { max-width: 720px; margin: 40px auto 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  article { padding-bottom: 64px; }
+  .origin { max-width: 720px; margin: 24px auto 0; font-size: 12px; color: var(--muted); }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 40px; padding-bottom: 24px; }
+  .pager a { display: grid; gap: 6px; padding: 20px; border: 1px dashed var(--line-strong); border-radius: var(--radius); font-weight: 600; letter-spacing: -0.01em; }
+  .pager a:hover { border-style: solid; background: var(--bg-soft); }
+  .pager .mono { font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+  .pager .r { text-align: right; }
+  @media (max-width: 640px) { .pager { grid-template-columns: 1fr; } .pager .r { text-align: left; } }
+
+  /* Rendered markdown */
+  .prose { max-width: 720px; margin: 0 auto; font-size: 17px; line-height: 1.7; }
+  .prose :global(> * + *) { margin-top: 1.2em; }
+  .prose :global(h2) { font-size: 26px; margin-top: 2em; line-height: 1.15; }
+  .prose :global(h3) { font-size: 20px; margin-top: 1.8em; line-height: 1.2; }
+  .prose :global(h4) { font-size: 19px; margin-top: 1.6em; }
+  .prose :global(a) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .prose :global(a:hover) { text-decoration-thickness: 2px; }
+  .prose :global(strong) { font-weight: 600; }
+  .prose :global(img) { margin: 2em auto; border-radius: var(--radius); }
+  .prose :global(figure) { margin: 2em 0; }
+  .prose :global(figcaption), .prose :global(img + em) { display: block; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: -1.2em; }
+  .prose :global(blockquote) { margin-left: 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.3em; }
+  .prose :global(li + li) { margin-top: 0.4em; }
+  .prose :global(hr) { border: 0; text-align: center; margin: 3em 0; }
+  .prose :global(hr::after) { content: '∵ ⩆ ∵'; font-family: var(--font-mono); color: var(--muted); font-size: 14px; }
+  .prose :global(code) { font-family: var(--font-mono); font-size: 0.82em; background: var(--bg-soft); border: 1px solid var(--line); padding: 1px 5px; border-radius: 3px; }
+  .prose :global(pre) { font-size: 14px; line-height: 1.6; padding: 20px; border: 1px dashed var(--line-strong); border-radius: var(--radius); overflow-x: auto; }
+  .prose :global(pre code) { background: none; border: 0; padding: 0; font-size: inherit; }
+  .prose :global(table) { width: 100%; border-collapse: collapse; font-size: 15px; display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { border-bottom: 1px dashed var(--line); padding: 8px 10px; text-align: left; }
+  .prose :global(iframe) { width: 100%; max-width: 100%; border: 0; }
+  @media (prefers-color-scheme: dark) { .prose :global(pre.astro-code) { background: var(--bg-soft) !important; } }
+</style>

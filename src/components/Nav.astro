@@ -1,0 +1,54 @@
+---
+import { site } from '../site.config';
+import { url } from '../utils';
+
+const path = Astro.url.pathname;
+const links = [
+  { label: 'About', href: url('/#about') },
+  { label: 'Experience', href: url('/#experience') },
+  { label: 'Work', href: url('/#work') },
+  { label: 'Writing', href: url('/blog/') },
+];
+const isBlog = path.includes('/blog');
+---
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href={url('/')} class="brand" aria-label="Home">
+      <span class="mark" aria-hidden="true">∵</span>
+      <span>{site.name}</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        {links.map((l) => (
+          <li><a class:list={['link-u', { active: l.label === 'Writing' && isBlog }]} href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a class="btn btn-dark nav-cta" href={`mailto:${site.email}`}>Get in touch</a>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px dashed var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; gap: 24px; height: 52px; max-width: 1040px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; font-size: 15px; }
+  .mark { color: var(--accent); font-size: 20px; line-height: 1; }
+  nav { margin-left: auto; }
+  ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  a.active { background-size: 100% 1px; }
+  .nav-cta { padding: 6px 12px; font-size: 11px; }
+  @media (max-width: 640px) {
+    .nav-cta { display: none; }
+    li:nth-child(1), li:nth-child(2) { display: none; }
+    ul { gap: 16px; font-size: 14px; }
+    .brand span:last-child { max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+</style>

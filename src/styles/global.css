@@ -1,0 +1,152 @@
+/* ── Tokens ──────────────────────────────────────────────── */
+:root {
+  --bg: #dedede;
+  --bg-soft: #fefefe;
+  --ink: #1e1e1e;
+  --ink-soft: #1e1e1edb;
+  --muted: #666666;
+  --line: #bdbdbd;
+  --line-strong: #1e1e1e;
+  --accent: #d45bb6;
+  --accent-soft: #f386a1;
+  --green: #03aa5c;
+  --teal: #09aea1;
+  --panel: #1e1e1e;
+  --panel-ink: #fefefe;
+
+  --font-sans: 'Iosevka Aile', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Iosevka', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --max: 1040px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --radius: 4px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --bg-soft: #1a1a1a;
+    --ink: #f2f2f2;
+    --ink-soft: #f2f2f2d0;
+    --muted: #9a9a9a;
+    --line: #2e2e2e;
+    --line-strong: #f2f2f2;
+    --panel: #f2f2f2;
+    --panel-ink: #121212;
+    color-scheme: dark;
+  }
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent-soft); color: #1e1e1e; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; line-height: 1.05; margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+
+/* ── Primitives ──────────────────────────────────────────── */
+.mono { font-family: var(--font-mono); }
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--muted);
+}
+.label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  display: inline-block;
+}
+.label.green::before { background: var(--green); }
+.label.teal::before { background: var(--teal); }
+
+.chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: lowercase;
+  padding: 3px 8px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 2px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-dark { background: var(--panel); color: var(--panel-ink); }
+.btn-dark:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-ghost:hover { background: var(--ink); color: var(--bg); }
+.btn .arrow { transition: transform 0.2s; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+.link-u {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s;
+}
+.link-u:hover { background-size: 100% 1px; }
+
+.dashed { border: 1px dashed var(--line-strong); }
+
+/* ── Section rhythm ──────────────────────────────────────── */
+section { padding: clamp(32px, 5vw, 56px) 0; }
+.section-head { display: grid; gap: 16px; margin-bottom: clamp(32px, 5vw, 56px); max-width: 760px; }
+.section-head h2 { font-size: clamp(26px, 3.5vw, 36px); }
+.section-head p { color: var(--ink-soft); font-size: 18px; }
+
+/* ── Reveal on scroll ────────────────────────────────────── */
+.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Acronyms (e.g. folder short names) keep their case inside lowercase labels. */
+.keep-case { text-transform: none; }

@@ -17,7 +17,7 @@ const { folder, posts } = Astro.props;
         <a class="link-u" href={url('/blog/')}>writing</a> / <span>{folder.slug}</span>
       </nav>
       <h1>{folder.title} {folder.short && <span class="chip keep-case">{folder.short}</span>}</h1>
-      <p>{folder.description}</p>
+      {folder.description && <p>{folder.description}</p>}
       <p class="mono count">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</p>
     </header>
     {posts.length ? <PostList posts={posts} numbered={folder.series} /> : <p class="mono empty">∵ first post coming soon.</p>}

@@ -194,7 +194,6 @@ export const site = {
     {
       slug: 'khandhar',
       title: 'खंडहर',
-      description: 'Khandhar — Hindi for “ruins”. Fragments, old ideas, and things worth digging through.',
     },
   ],
 

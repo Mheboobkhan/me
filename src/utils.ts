@@ -2,7 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { site } from './site.config';
 
 export type Post = CollectionEntry<'blog'>;
-export type Folder = { slug: string; title: string; description: string; short?: string; series?: boolean };
+export type Folder = { slug: string; title: string; description?: string; short?: string; series?: boolean };
 
 /** Prefix an internal path with the configured base (needed for project-repo GitHub Pages). */
 export function url(path = '/') {

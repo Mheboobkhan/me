@@ -27,7 +27,7 @@ const total = folders.reduce((n, f) => n + f.posts.length, 0);
           <a class="link-u" href={url(`/blog/${folder.slug}/`)}>{folder.title}</a>
           {folder.short && <span class="chip keep-case">{folder.short}</span>}
         </h2>
-        <p class="desc">{folder.description}</p>
+        {folder.description && <p class="desc">{folder.description}</p>}
         {posts.length ? <PostList posts={posts} numbered={folder.series} /> : <p class="mono empty">∵ first post coming soon.</p>}
       </section>
     ))}

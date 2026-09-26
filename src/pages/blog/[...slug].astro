@@ -52,7 +52,7 @@ const d = post.data;
     )}
 
     <div class="wrap">
-      <div class="prose">
+      <div class:list={['prose', { verse: d.category === 'poetry' }]}>
         <Content />
       </div>
       {d.tags.length > 0 && (
@@ -121,4 +121,6 @@ const d = post.data;
   .prose :global(th), .prose :global(td) { border-bottom: 1px dashed var(--line); padding: 8px 10px; text-align: left; }
   .prose :global(iframe) { width: 100%; max-width: 100%; border: 0; }
   @media (prefers-color-scheme: dark) { .prose :global(pre.astro-code) { background: var(--bg-soft) !important; } }
+  /* Poems keep their line breaks. */
+  .verse :global(p) { white-space: pre-line; }
 </style>

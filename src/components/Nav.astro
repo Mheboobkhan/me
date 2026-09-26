@@ -8,8 +8,10 @@ const links = [
   { label: 'Experience', href: url('/#experience') },
   { label: 'Work', href: url('/#work') },
   { label: 'Writing', href: url('/blog/') },
+  { label: 'Resume', href: url('/resume/') },
 ];
 const isBlog = path.includes('/blog');
+const isResume = path.includes('/resume');
 ---
 <header class="nav">
   <div class="wrap nav-inner">
@@ -20,7 +22,7 @@ const isBlog = path.includes('/blog');
     <nav aria-label="Primary">
       <ul>
         {links.map((l) => (
-          <li><a class:list={['link-u', { active: l.label === 'Writing' && isBlog }]} href={l.href}>{l.label}</a></li>
+          <li><a class:list={['link-u', { active: (l.label === 'Writing' && isBlog) || (l.label === 'Resume' && isResume) }]} href={l.href}>{l.label}</a></li>
         ))}
       </ul>
     </nav>

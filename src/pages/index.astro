@@ -9,6 +9,7 @@ import { url, getFolders } from '../utils';
 const folders = await getFolders();
 const gh = site.socials.find((s) => s.label === 'GitHub');
 const li = site.socials.find((s) => s.label === 'LinkedIn');
+const md = site.socials.find((s) => s.label === 'Medium');
 ---
 <Base>
   <div class="wrap page">
@@ -26,6 +27,8 @@ const li = site.socials.find((s) => s.label === 'LinkedIn');
         <li><span>email</span><a class="link-u" href={`mailto:${site.email}`}>{site.email}</a></li>
         {gh && <li><span>github</span><a class="link-u" href={gh.href} target="_blank" rel="noopener me">{gh.href.split('/').filter(Boolean).pop()}</a></li>}
         {li && <li><span>linkedin</span><a class="link-u" href={li.href} target="_blank" rel="noopener me">in/{li.href.split('/').filter(Boolean).pop()}</a></li>}
+        {md && <li><span>medium</span><a class="link-u" href={md.href} target="_blank" rel="noopener me">{new URL(md.href).hostname.split('.')[0]}</a></li>}
+        <li><span>resume</span><a class="link-u" href={url('/resume/')}>full resume</a></li>
         <li><span>writing</span><span class="pair"><a class="link-u" href={url('/blog/')}>blog</a> · <a class="link-u" href={url('/rss.xml')}>rss</a></span></li>
       </ul>
 
@@ -54,7 +57,7 @@ const li = site.socials.find((s) => s.label === 'LinkedIn');
       </section>
 
       <section id="experience">
-        <h2><span class="num mono">§2</span> Experience</h2>
+        <h2><span class="num mono">§2</span> Experience <a class="more mono link-u" href={url('/resume/')}>full resume →</a></h2>
         <ol class="rows">
           {site.experience.map((e) => (
             <li>
@@ -125,7 +128,7 @@ const li = site.socials.find((s) => s.label === 'LinkedIn');
       </section>
 
       <section id="credentials">
-        <h2><span class="num mono">§6</span> Credentials</h2>
+        <h2><span class="num mono">§6</span> Education</h2>
         <ul class="creds">
           {site.credentials.map((c) => (
             <li><span class="mono kind">{c.kind}</span><span>{c.name}</span></li>

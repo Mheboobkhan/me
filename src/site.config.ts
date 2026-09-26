@@ -7,96 +7,172 @@ export const site = {
   // Short version shown in the loader and labels.
   shortName: 'mheboobkhan',
   version: '9.0',
-  title: 'Mheboobkhan Pathan — Senior Threat Researcher',
+  title: 'Mheboobkhan Pathan — Senior Threat Hunter',
   description:
-    'Mheboobkhan Pathan is a Senior Threat Researcher at Microsoft with 9+ years in security operations, MDR, incident response, and threat hunting. Writing on probability, Bayesian inference, and hunting.',
+    'Mheboobkhan Pathan is a Senior Threat Hunter at Microsoft with 9+ years of experience in threat hunting and incident response. Writing on probability, Bayesian inference, and hunting.',
   email: 'mheboob4444@gmail.com',
+  location: 'Hyderabad, India',
 
   hero: {
-    kicker: 'senior threat researcher / microsoft',
+    kicker: 'senior threat hunter / microsoft',
     headline: 'Hunting threats. Quantifying uncertainty.',
-    sub: 'Nine years across security operations, MDR, incident response, and threat hunting. I lead high-severity investigations at Microsoft and write about probability, Bayesian inference, and the craft of the hunt.',
+    sub: 'Cyber threat hunter and incident responder with 9+ years of experience identifying, analyzing, and mitigating sophisticated cyber threats. I hunt and respond for Microsoft’s MXDR service, and I’m eager to apply mathematical concepts to real-world security problems.',
   },
 
+  // Also the "Professional summary" on the resume page.
+  summary:
+    'Seasoned cyber threat hunter and incident responder with over 9 years of experience in identifying, analyzing, and mitigating sophisticated cyber threats. Proficient with advanced threat detection tools, thorough investigations, and robust security measures that safeguard critical information assets. Eager to apply mathematical concepts to solve real-world cyber security problems.',
+
   about: [
-    'I’m a cybersecurity professional who has spent over nine years in Security Operations, Managed Detection & Response, Incident Response, and Threat Hunting — leading complex investigations, sharpening detection capabilities, and mentoring the analysts who come next.',
-    'At Microsoft I investigate high-severity incidents across 1,000+ customer tenants — ransomware, cloud attacks, identity threats, and sophisticated malware campaigns — and work with engineering to turn what we learn into products.',
-    'Lately I’m most interested in where security meets probability: using AI and Bayesian reasoning to make detections calibrated instead of noisy.',
+    'I’ve spent over nine years in security, from desktop support and antivirus administration to leading threat hunts and responding to major incidents — at ITSource, IDC Technologies, NetConnect, IBM, Nomura, and now Microsoft.',
+    'At Microsoft I’m an incident responder and threat hunter for the MXDR service, handling threats for more than 60 customers — ransomware, cloud attacks, and sophisticated malware — and working with engineering and PMs to ship products.',
+    'I’m most interested in applying mathematical concepts — probability and Bayesian reasoning — to real-world security problems.',
   ],
 
   // Rendered as the three-column grid under About.
   principles: [
-    { label: 'hypothesis, not hunch', body: 'Hunts built on MITRE ATT&CK, the Pyramid of Pain, and the Diamond Model — chasing TTPs, not just IoCs.' },
-    { label: 'calibrated detections', body: 'Fewer false positives, clearer signals. AI and ML where they measurably help the analyst.' },
-    { label: 'teach it forward', body: 'Mentoring analysts and running training that raises the team’s AI fluency.' },
+    { label: 'hypothesis, not hunch', body: 'Hunts built on MITRE ATT&CK, the Pyramid of Pain, and the Diamond Model — moving from intel-only hunting to IoA and TTP-based hunting.' },
+    { label: 'less noise', body: 'AI and ML where they measurably help the analyst — like cutting alert noise by up to 40%.' },
+    { label: 'teach it forward', body: 'Guiding and mentoring junior team members, and leading hunt teams.' },
   ],
 
   stats: [
-    { value: '9+', label: 'years in security operations' },
-    { value: '1,000+', label: 'customer tenants investigated' },
-    { value: '~40%', label: 'fewer false-positive alerts' },
+    { value: '9+', label: 'years in cyber security' },
+    { value: '60+', label: 'customers responded for' },
+    { value: '40%', label: 'less alert noise' },
+    { value: '4', label: 'major products shipped' },
   ],
 
   // "Selected impact" cards. `href` is optional.
   projects: [
     {
-      name: 'AI alert grading',
+      name: 'AI false-positive resolution',
       tag: 'ai / detection',
-      description: 'Partnered with engineering to build and deploy an AI-based alert grading solution that cut false-positive alert volume by roughly 40%.',
+      description: 'Implemented an AI model that resolves known false positives by learning from historic grading, reducing alert noise by up to 40%.',
     },
     {
-      name: 'PII leak prevention',
-      tag: 'hackathon → prod',
-      description: 'A hackathon proof of concept, adopted by leadership and rolled out business-wide, that brought data privacy incidents to nearly zero. Won the DEX Ninja Award.',
+      name: 'PII delivery prevention',
+      tag: 'privacy',
+      description: 'Built a proof of concept that prevents PII from being delivered to unintended audiences, reducing data privacy incidents.',
     },
     {
-      name: 'ADX operations dashboard',
-      tag: 'automation',
-      description: 'An Azure Data Explorer dashboard that automated operational reporting, surfaced key business metrics, and saves about an hour of manual work every day.',
+      name: 'Products & solutions',
+      tag: 'engineering',
+      description: 'Worked with engineering and PMs to ship 4 major products to production; 2 of my solutions were adopted by leadership.',
     },
   ],
 
+  // Homepage shows `summary`; the resume page shows `highlights` and `tools`.
   experience: [
     {
       when: 'Nov 2022 — now',
-      role: 'Senior Threat Researcher',
-      org: 'Microsoft',
-      summary: 'High-severity incident investigations for MDR clients; shipped four security products with Engineering and PM; mentor to junior analysts.',
+      role: 'Senior Threat Hunter',
+      org: 'Microsoft R&D',
+      location: 'Hyderabad, Telangana',
+      summary: 'Incident responder and threat hunter for Microsoft’s MXDR service across 60+ customers; cut alert noise by up to 40% with AI; helped ship 4 major products.',
+      highlights: [
+        'Incident responder and threat hunter for Microsoft’s MXDR service — advanced incident response and threat hunting for customers across many sectors, responding to threats for more than 60 customers.',
+        'Reduced alert noise by up to 40% by implementing an AI model that resolves known false positives by learning from historic grading.',
+        'Reduced data privacy incidents with a proof of concept that prevents PII from being delivered to unintended audiences.',
+        'Collaborate with engineering and PMs to deliver products efficiently; helped ship 4 major products to production.',
+        'Provided 2 major solutions to business problems that were adopted by leadership.',
+        'Respond to threats ranging from ransomware and cloud attacks to sophisticated malware; write project reports and coordinate with the team.',
+        'Guide and mentor junior team members.',
+      ],
     },
     {
       when: 'Jun 2022 — Nov 2022',
       role: 'Senior Support Analyst',
       org: 'Nomura Holdings',
-      summary: 'Ran the threat hunting program, moving it from intel-driven to hypothesis-based hunting; planned Purple Team exercises; wrote detections in Splunk, Elastic, and CrowdStrike.',
+      location: 'Mumbai, Maharashtra',
+      summary: 'Guided the threat hunting program from purely intel-based to IoA and TTP-based hunting; purple team exercises; detections in Splunk, Elastic, and CrowdStrike.',
+      highlights: [
+        'Developed advanced threat hunting strategies based on methodologies like the Pyramid of Pain and the Diamond Model.',
+        'Guided a team in executing the threat hunting program, moving the organization from purely intel-based hunting to IoA and TTP-based hunting.',
+        'Coordinated and executed purple team exercises.',
+        'Developed advanced threat detection logic and queries in Splunk, Elastic, and CrowdStrike.',
+        'Integrated threat hunting into daily operations using machine learning and AI.',
+        'Participated in incident response for major incidents.',
+      ],
+      tools: ['Splunk', 'SIEM', 'Python'],
     },
     {
       when: 'Mar 2020 — Jun 2022',
-      role: 'Security Consultant (Lead)',
+      role: 'Security Consultant',
       org: 'IBM India',
-      summary: 'Led a four-person hunt team; mapped threat landscapes to MITRE ATT&CK; turned CTI and APT research into IoAs, IoCs, and detection use cases.',
+      location: 'Mumbai, Maharashtra',
+      summary: 'Led a four-person hunt team; mapped threats to MITRE ATT&CK; turned threat intelligence and APT research into IoAs, IoCs, and detection use cases.',
+      highlights: [
+        'Conducted regular threat hunts that uncovered multiple hidden threats undetected by existing security products, protecting the organization from monetary and reputational loss.',
+        'Led a team of four conducting threat hunting in customer environments.',
+        'Mapped threats on the MITRE ATT&CK framework against the organization’s threat landscape to keep a constant picture of the attack surface.',
+        'Collected and analyzed threat intelligence, including new attack vectors and APT campaigns, extracting indicators of attack (IoA) and compromise (IoC).',
+        'Performed threat modeling of external and internal attack surfaces to develop precise hunting hypotheses.',
+        'Developed use cases from hunting results to enhance detection capabilities.',
+        'Worked with incident response to eradicate threats found during hunts and conduct root cause analysis (RCA).',
+        'Prepared detailed reports and monthly presentations of hunt results for executive management.',
+      ],
+      tools: ['QRadar', 'TIP (Cyware)', 'AQL', 'Sysmon', 'YARA'],
+    },
+    {
+      when: 'Nov 2018 — Mar 2020',
+      role: 'InfoSec Admin',
+      org: 'NetConnect Pvt Ltd',
+      location: 'Mumbai, Maharashtra',
+      summary: 'Built security operations content — queries, rules, alerts, dashboards — and migrated endpoints from Trend Micro to Sophos.',
+      highlights: [
+        'Developed security operations content: queries, templates, reports, rules, alerts, dashboards, and workflows.',
+        'Developed, implemented, and configured guides for the operations support team.',
+        'Migrated endpoints from Trend Micro to Sophos.',
+        'Diagnosed and resolved complex customer issues, designing solutions and facilitating deployment.',
+        'Contributed to unit-level and organizational initiatives.',
+      ],
+    },
+    {
+      when: 'Nov 2018 — Mar 2020',
+      role: 'Antivirus Admin',
+      org: 'IDC Technologies',
+      location: 'Mumbai, Maharashtra',
+      summary: 'Antivirus patching, signature monitoring, and troubleshooting across endpoints; SOPs and compliance reports.',
+      highlights: [
+        'Deployed antivirus patches on endpoint devices.',
+        'Monitored antivirus signature updates on all scoped devices.',
+        'Troubleshot antivirus issues via the central console.',
+        'Collected and analyzed logs.',
+        'Prepared and maintained SOPs, weekly compliance reports, and risk reports.',
+      ],
+    },
+    {
+      when: 'Mar 2016 — Jul 2017',
+      role: 'Desktop Support Engineer',
+      org: 'ITSource Technologies',
+      location: 'Mumbai, Maharashtra',
+      summary: 'Antivirus compliance, agent troubleshooting, and remote user support.',
+      highlights: [
+        'Maintained compliance of antivirus systems.',
+        'Troubleshot agent issues.',
+        'Resolved user issues remotely and coordinated with the OEM.',
+      ],
     },
   ],
 
   skills: [
     {
       group: 'hunt & respond',
-      items: ['Threat Hunting', 'Incident Response', 'MDR', 'SOC', 'Detection Engineering', 'Threat Intelligence', 'MITRE ATT&CK', 'Purple Teaming', 'Threat Modeling', 'Malware Analysis', 'Ransomware', 'RCA'],
+      items: ['Threat Hunting', 'Incident Response', 'MXDR', 'Threat Intelligence', 'MITRE ATT&CK', 'Pyramid of Pain', 'Diamond Model', 'Purple Teaming', 'Threat Modeling', 'Detection Use Cases', 'RCA'],
     },
     {
       group: 'platforms',
-      items: ['Microsoft Defender XDR', 'Microsoft Sentinel', 'Splunk', 'Elastic', 'CrowdStrike Falcon', 'IBM QRadar', 'Azure Data Explorer', 'Cloud Security'],
+      items: ['Splunk', 'Elastic', 'CrowdStrike', 'IBM QRadar', 'Cyware TIP', 'Sysmon', 'YARA', 'Sophos', 'Trend Micro'],
     },
     {
       group: 'code, data & ai',
-      items: ['KQL', 'Python', 'PowerShell', 'Security Copilot', 'Generative AI', 'Machine Learning', 'Bayesian Inference', 'PyMC'],
+      items: ['Python', 'AQL', 'SIEM queries', 'Machine Learning', 'AI'],
     },
   ],
 
   credentials: [
-    { kind: 'certification', name: 'CISSP' },
-    { kind: 'certification', name: 'Probability Foundations for Data Science and AI' },
-    { kind: 'award', name: 'DEX Ninja Award — hackathon solution that cut org-wide data privacy incidents' },
-    { kind: 'education', name: 'Electronics Engineering, Mumbai University — 2015' },
+    { kind: 'education', name: 'B.Sc., Electronic Engineering — MH Saboo Siddik College of Engineering, Mumbai (2015)' },
   ],
 
   // Writing folders. Each one is a directory in src/content/blog/<slug>/ and
@@ -125,5 +201,6 @@ export const site = {
   socials: [
     { label: 'GitHub', href: 'https://github.com/Mheboobkhan' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mheboobkhan' },
+    { label: 'Medium', href: 'https://whiteheart0.medium.com/' },
   ],
 };

@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+
+const li = site.socials.find((s) => s.label === 'LinkedIn');
+const profiles = site.socials.filter((s) => s.label !== 'LinkedIn');
+---
+<Base title="Resume" description={`Resume of ${site.name}: ${site.summary}`}>
+  <div class="wrap page">
+    <header class="head">
+      <span class="label" data-decode>resume</span>
+      <h1>{site.name}</h1>
+      <p class="role">{site.experience[0].role}, {site.experience[0].org}</p>
+      <ul class="contact mono">
+        <li>{site.location}</li>
+        <li><a class="link-u" href={`mailto:${site.email}`}>{site.email}</a></li>
+        {li && <li><a class="link-u" href={li.href} target="_blank" rel="noopener me">LinkedIn</a></li>}
+      </ul>
+      <button class="btn print mono" type="button" onclick="window.print()">save as pdf ↓</button>
+    </header>
+
+    <section>
+      <h2><span class="num mono">01</span> Professional summary</h2>
+      <p>{site.summary}</p>
+    </section>
+
+    <section>
+      <h2><span class="num mono">02</span> Work history</h2>
+      <ol class="jobs">
+        {site.experience.map((e) => (
+          <li>
+            <div class="job-head">
+              <p><strong>{e.role}</strong>, <span class="org">{e.org}</span> <span class="loc">— {e.location}</span></p>
+              <span class="mono date">{e.when}</span>
+            </div>
+            <ul class="bullets">
+              {e.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+            {e.tools && <p class="tools mono"><span>tools</span> {e.tools.join(' · ')}</p>}
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section>
+      <h2><span class="num mono">03</span> Skills</h2>
+      <dl class="skills">
+        {site.skills.map((g) => (
+          <div>
+            <dt class="mono">{g.group}</dt>
+            <dd>{g.items.join(' · ')}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2><span class="num mono">04</span> Education</h2>
+      <ul class="plain">
+        {site.credentials.map((c) => <li>{c.name}</li>)}
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num mono">05</span> Websites & profiles</h2>
+      <ul class="plain">
+        {profiles.map((s) => (
+          <li><a class="link-u" href={s.href} target="_blank" rel="noopener me">{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page { max-width: 860px; padding-top: 40px; padding-bottom: 24px; font-size: 15.5px; line-height: 1.6; }
+  .head { display: grid; gap: 8px; justify-items: start; padding-bottom: 24px; margin-bottom: 28px; border-bottom: 1px dashed var(--line-strong); }
+  h1 { font-size: clamp(30px, 4.5vw, 40px); letter-spacing: -0.01em; }
+  .role { font-size: 17px; }
+  .contact { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; font-size: 12.5px; color: var(--muted); }
+  .print { margin-top: 6px; padding: 6px 12px; font-size: 11px; }
+
+  section { padding: 0 0 24px; margin-bottom: 24px; border-bottom: 1px dashed var(--line-strong); }
+  section:last-child { border-bottom: 0; margin-bottom: 0; }
+  h2 { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 14px; display: flex; align-items: baseline; gap: 10px; }
+  .num { font-size: 12px; font-weight: 400; color: var(--accent); letter-spacing: 0; }
+  section > p { color: var(--ink-soft); }
+
+  .jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+  .job-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
+  .org { color: var(--ink-soft); }
+  .loc { color: var(--muted); font-size: 14px; }
+  .date { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+  .bullets { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14.5px; color: var(--ink-soft); }
+  .tools { margin-top: 8px; font-size: 12px; color: var(--ink-soft); }
+  .tools span { color: var(--accent); margin-right: 8px; }
+
+  .skills { margin: 0; display: grid; gap: 10px; }
+  .skills div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; }
+  .skills dt { font-size: 12px; color: var(--accent); }
+  .skills dd { margin: 0; font-size: 14px; color: var(--ink-soft); }
+  .plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+
+  @media (max-width: 520px) {
+    .skills div { grid-template-columns: 1fr; gap: 2px; }
+  }
+
+  @media print {
+    :global(.nav), :global(footer), .print, .label { display: none !important; }
+    .page { padding-top: 0; font-size: 12px; }
+    section { break-inside: auto; }
+    .jobs > li { break-inside: avoid; }
+  }
+</style>

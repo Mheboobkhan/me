@@ -16,18 +16,12 @@ export const site = {
   hero: {
     kicker: 'senior threat hunter / microsoft',
     headline: 'Hunting threats. Quantifying uncertainty.',
-    sub: 'Cyber threat hunter and incident responder with 9+ years of experience identifying, analyzing, and mitigating sophisticated cyber threats. I hunt and respond for Microsoft’s MXDR service, and I’m eager to apply mathematical concepts to real-world security problems.',
+    sub: 'Threat hunter and incident responder with 9+ years in cyber security. I hunt for Microsoft’s MXDR service and write about applying probability to real-world security problems.',
   },
 
   // Also the "Professional summary" on the resume page.
   summary:
     'Seasoned cyber threat hunter and incident responder with over 9 years of experience in identifying, analyzing, and mitigating sophisticated cyber threats. Proficient with advanced threat detection tools, thorough investigations, and robust security measures that safeguard critical information assets. Eager to apply mathematical concepts to solve real-world cyber security problems.',
-
-  about: [
-    'I’ve spent over nine years in security, from desktop support and antivirus administration to leading threat hunts and responding to major incidents — at ITSource, IDC Technologies, NetConnect, IBM, Nomura, and now Microsoft.',
-    'At Microsoft I’m an incident responder and threat hunter for the MXDR service, handling threats for more than 60 customers — ransomware, cloud attacks, and sophisticated malware — and working with engineering and PMs to ship products.',
-    'I’m most interested in applying mathematical concepts — probability and Bayesian reasoning — to real-world security problems.',
-  ],
 
   // Rendered as the three-column grid under About.
   principles: [
@@ -62,7 +56,16 @@ export const site = {
     },
   ],
 
-  // Homepage shows `summary`; the resume page shows `highlights` and `tools`.
+  // Pinned GitHub repos, shown under "Selected work". `fork` marks a repo that isn't original work.
+  github: [
+    { name: 'ShadowMandate', lang: 'Python', href: 'https://github.com/Mheboobkhan/ShadowMandate', description: 'Bayesian-network drift detector for AI agent logs — scores behavior against generic bad-pattern rules and each agent’s own declared mandate.' },
+    { name: 'twitter_cti', lang: 'Go', href: 'https://github.com/Mheboobkhan/twitter_cti', description: 'Twitter IOC hunter — parses IPs, URLs (fanged and defanged), and hashes.' },
+    { name: 'threathuntingwithpython', lang: 'Jupyter', href: 'https://github.com/Mheboobkhan/threathuntingwithpython', description: 'Machine learning tools for threat hunting, from baselining to threat detection.' },
+    { name: 'Sycth', lang: 'Python', href: 'https://github.com/Mheboobkhan/Sycth', description: 'Recovers passwords from crackme binaries using angr symbolic execution.' },
+    { name: 'garak', lang: 'fork', fork: true, href: 'https://github.com/Mheboobkhan/garak', description: 'Fork of NVIDIA’s garak, the LLM vulnerability scanner.' },
+  ],
+
+  // Homepage shows the first three entries' `summary`; the resume page shows `highlights` and `tools`.
   experience: [
     {
       when: 'Nov 2022 — now',
@@ -194,6 +197,8 @@ export const site = {
     {
       slug: 'khandhar',
       title: 'खंडहर',
+      // Easter egg: listed under Writing, never on the homepage.
+      home: false,
     },
   ],
 

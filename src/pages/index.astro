@@ -6,7 +6,7 @@ import { site } from '../site.config';
 import PostList from '../components/PostList.astro';
 import { url, getFolders } from '../utils';
 
-const folders = await getFolders();
+const folders = (await getFolders()).filter(({ folder }) => folder.home !== false);
 const gh = site.socials.find((s) => s.label === 'GitHub');
 const li = site.socials.find((s) => s.label === 'LinkedIn');
 const md = site.socials.find((s) => s.label === 'Medium');
@@ -44,7 +44,6 @@ const md = site.socials.find((s) => s.label === 'Medium');
       <section id="about">
         <h2><span class="num mono">§1</span> About</h2>
         <p class="lede">{site.hero.sub}</p>
-        {site.about.map((p) => <p>{p}</p>)}
 
         <dl class="interests">
           {site.principles.map((pr, i) => (
@@ -59,7 +58,7 @@ const md = site.socials.find((s) => s.label === 'Medium');
       <section id="experience">
         <h2><span class="num mono">§2</span> Experience <a class="more mono link-u" href={url('/resume/')}>full resume →</a></h2>
         <ol class="rows">
-          {site.experience.map((e) => (
+          {site.experience.slice(0, 3).map((e) => (
             <li>
               <span class="mono date">{e.when}</span>
               <div>
@@ -83,6 +82,22 @@ const md = site.socials.find((s) => s.label === 'Medium');
                   <span class="chip">{p.tag}</span>
                 </p>
                 <p class="note">{p.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <h3 class="gh-head">on github <a class="mono link-u fmore" href="https://github.com/Mheboobkhan" target="_blank" rel="noopener me">all repos →</a></h3>
+        <ol class="refs">
+          {site.github.map((r: { name: string; lang: string; href: string; description: string; fork?: boolean }) => (
+            <li>
+              <span class="mono ref">gh</span>
+              <div>
+                <p>
+                  <a class="title link-u" href={r.href} target="_blank" rel="noopener">{r.name}</a>
+                  <span class="chip keep-case">{r.lang}</span>
+                </p>
+                <p class="note">{r.description}</p>
               </div>
             </li>
           ))}
@@ -194,6 +209,8 @@ const md = site.socials.find((s) => s.label === 'Medium');
   h3 { font-size: 15px; letter-spacing: 0; margin: 0 0 10px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
   h3 .chip { font-size: 10px; padding: 1px 6px; }
   .fcount { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: auto; }
+  .gh-head { margin-top: 24px; }
+  .gh-head .fmore { margin: 0 0 0 auto; }
   .fmore { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--muted); }
 
   .fig-gauss { margin: 22px 0 0; display: grid; gap: 8px; }

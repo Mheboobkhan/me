@@ -13,7 +13,7 @@ export const site = {
   email: 'mheboob4444@gmail.com',
   location: 'Hyderabad, India',
   // GoatCounter site code (the "xyz" in xyz.goatcounter.com). Empty = no tracking and no visit counter.
-  goatcounter: '',
+  goatcounter: 'mheboobkhan',
 
   hero: {
     kicker: 'senior threat hunter / microsoft',

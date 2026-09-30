@@ -17,6 +17,7 @@ const year = new Date().getFullYear();
       <div class="left">
         <a href={url('/')} class="name">{site.name} © {year}</a>
         <a class="mono link-u mail" href={`mailto:${site.email}`}>{site.email}</a>
+        {site.goatcounter && <span class="mono visits" data-goatcounter-total={site.goatcounter} hidden></span>}
       </div>
       <ul class="socials">
         {site.socials.map((s) => (
@@ -27,6 +28,17 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<script>
+  // Site-wide visit total from GoatCounter's public counter; stays hidden if it can't load.
+  const el = document.querySelector<HTMLElement>('[data-goatcounter-total]');
+  if (el) {
+    fetch(`https://${el.dataset.goatcounterTotal}.goatcounter.com/counter/TOTAL.json`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d: { count: string }) => { el.textContent = `∵ ${d.count} visits`; el.hidden = false; })
+      .catch(() => {});
+  }
+</script>
 
 <style>
   footer { padding: 8px 0 28px; }
@@ -42,5 +54,6 @@ const year = new Date().getFullYear();
   .left { display: grid; gap: 6px; }
   .name { font-weight: 600; font-size: 14px; }
   .mail { font-size: 13px; color: var(--muted); justify-self: start; }
+  .visits { font-size: 11px; color: var(--muted); }
   .socials { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 0; font-size: 13px; }
 </style>

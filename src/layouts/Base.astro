@@ -46,6 +46,9 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
 
     <script is:inline>document.documentElement.classList.add('js');</script>
+    {site.goatcounter && (
+      <script is:inline async data-goatcounter={`https://${site.goatcounter}.goatcounter.com/count`} src="//gc.zgo.at/count.js"></script>
+    )}
   </head>
   <body>
     {loader && (

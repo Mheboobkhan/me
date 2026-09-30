@@ -12,6 +12,8 @@ export const site = {
     'Mheboobkhan Pathan is a Senior Threat Hunter at Microsoft with 9+ years of experience in threat hunting and incident response. Writing on probability, Bayesian inference, and hunting.',
   email: 'mheboob4444@gmail.com',
   location: 'Hyderabad, India',
+  // GoatCounter site code (the "xyz" in xyz.goatcounter.com). Empty = no tracking and no visit counter.
+  goatcounter: '',
 
   hero: {
     kicker: 'senior threat hunter / microsoft',

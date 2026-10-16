@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
     title: site.name,
     description: site.description,
     site: context.site!,
-    items: posts.map((p) => ({
+    items: posts.filter((p) => !p.id.startsWith('khandhar/')).map((p) => ({
       title: p.data.title,
       description: p.data.description,
       pubDate: p.data.pubDate,

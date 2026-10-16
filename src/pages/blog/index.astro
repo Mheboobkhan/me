@@ -28,7 +28,7 @@ const total = folders.reduce((n, f) => n + f.posts.length, 0);
           {folder.short && <span class="chip keep-case">{folder.short}</span>}
         </h2>
         {folder.description && <p class="desc">{folder.description}</p>}
-        {posts.length ? <PostList posts={posts} numbered={folder.series} /> : <p class="mono empty">∵ first post coming soon.</p>}
+        {folder.slug === 'khandhar' ? <p class="mono"><a class="link-u" href={url('/blog/khandhar/')}>Password required →</a></p> : posts.length ? <PostList posts={posts} numbered={folder.series} /> : <p class="mono empty">∵ first post coming soon.</p>}
       </section>
     ))}
   </div>

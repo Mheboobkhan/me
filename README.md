@@ -86,3 +86,13 @@ Post body in Markdown.
 
 Every push to `main` rebuilds and deploys (`.github/workflows/deploy.yml`).
 For a custom domain, add a `public/CNAME` file containing the domain and configure it under Settings → Pages.
+
+## Khandhar password protection
+
+`npm run build` encrypts every HTML page under `dist/blog/khandhar/` after Astro renders it. The folder and direct post URLs require a password. Public writing previews, RSS, and the sitemap omit Khandhar post details. Use the production build when checking protection; `npm run dev` serves source content without encryption.
+
+The tracked `khandhar-lock.json` contains a public encryption key and a password-encrypted private key. Future builds need no password or CI secret. To change the password, run `node scripts/protect-khandhar.mjs --init` and provide the new password through stdin, then commit the updated key file and rebuild. Do not put the password in source or command arguments.
+
+This protects the published pages only. Markdown and Git history in this public repository remain readable; this is not a private storage system. Previously downloaded copies cannot be revoked.
+
+Chapter 4 retains its original Org draft alongside the published `index.md`. Edit the Markdown for publication; equations render locally using KaTeX.

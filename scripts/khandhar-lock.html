@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>खंडहर — Password required</title>
+<style>
+:root {color-scheme:light dark} body {font:18px/1.6 system-ui;max-width:420px;margin:15vh auto;padding:24px} input,button {font:inherit;padding:10px;box-sizing:border-box;width:100%;margin:8px 0} button {cursor:pointer} #status {min-height:2em} a {color:inherit}
+</style>
+<h1>खंडहर</h1>
+<p>Enter the password to read this collection.</p>
+<form id="unlock">
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required autofocus>
+<button>Unlock</button>
+<p id="status" role="status" aria-live="polite"></p>
+</form>
+<noscript>JavaScript is required to decrypt this collection.</noscript>
+<script>
+const payload = "__PAYLOAD__";
+const bytes = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+document.getElementById('unlock').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const button = event.target.querySelector('button');
+  const status = document.getElementById('status');
+  button.disabled = true;
+  status.textContent = 'Unlocking…';
+  try {
+    const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(document.getElementById('password').value), 'PBKDF2', false, ['deriveKey']);
+    const passwordKey = await crypto.subtle.deriveKey({name:'PBKDF2',hash:'SHA-256',salt:bytes(payload.salt),iterations:payload.iterations}, material, {name:'AES-GCM',length:256}, false, ['decrypt']);
+    const privateBytes = await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(payload.iv)},passwordKey,bytes(payload.lockedKey));
+    const privateKey = await crypto.subtle.importKey('pkcs8',privateBytes,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+    const rawKey = await crypto.subtle.decrypt({name:'RSA-OAEP'},privateKey,bytes(payload.wrappedKey));
+    const key = await crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']);
+    const html = await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(payload.contentIv)},key,bytes(payload.content));
+    document.open(); document.write(new TextDecoder().decode(html)); document.close();
+  } catch {
+    status.textContent = 'Unable to unlock. Check the password and try again.';
+    button.disabled = false;
+  }
+});
+</script>
+</html>

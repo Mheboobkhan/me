@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config';
+import { url } from '../utils';
 
 const li = site.socials.find((s) => s.label === 'LinkedIn');
 const profiles = site.socials.filter((s) => s.label !== 'LinkedIn');
@@ -55,14 +56,43 @@ const profiles = site.socials.filter((s) => s.label !== 'LinkedIn');
     </section>
 
     <section>
-      <h2><span class="num mono">04</span> Education</h2>
+      <h2><span class="num mono">04</span> Education & certifications</h2>
       <ul class="plain">
         {site.credentials.map((c) => <li>{c.name}</li>)}
       </ul>
     </section>
 
     <section>
-      <h2><span class="num mono">05</span> Websites & profiles</h2>
+      <h2><span class="num mono">05</span> AI security research & open source</h2>
+      <ol class="jobs">
+        {site.research.map((project) => (
+          <li>
+            <div class="job-head">
+              <h3><a class="link-u" href={project.href} target="_blank" rel="noopener">{project.name}</a></h3>
+              <span class="mono date">{project.role}</span>
+            </div>
+            <ul class="bullets">
+              {project.highlights.map((highlight) => <li>{highlight}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section>
+      <h2><span class="num mono">06</span> Technical writing</h2>
+      <div class="research-writing">
+        <div class="job-head">
+          <h3><a class="link-u" href={url('/blog/probabilistic-threat-hunting/')}>{site.researchWriting.name}</a></h3>
+          <span class="mono date">{site.researchWriting.role}</span>
+        </div>
+        <p>{site.researchWriting.description}</p>
+      </div>
+      <p>Author articles on probability, Bayesian inference, and threat hunting: <a class="link-u" href="https://medium.com/@whiteheart0" target="_blank" rel="noopener me">Medium</a>.</p>
+    </section>
+
+    <section>
+      <h2><span class="num mono">07</span> Websites & profiles</h2>
       <ul class="plain">
         {profiles.map((s) => (
           <li><a class="link-u" href={s.href} target="_blank" rel="noopener me">{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></li>
@@ -95,6 +125,10 @@ const profiles = site.socials.filter((s) => s.label !== 'LinkedIn');
   .tools { margin-top: 8px; font-size: 12px; color: var(--ink-soft); }
   .tools span { color: var(--accent); margin-right: 8px; }
 
+  h3 { font-size: 15.5px; margin: 0; }
+  .research-writing { margin-bottom: 14px; color: var(--ink-soft); }
+  .research-writing > p { margin-top: 6px; }
+
   .skills { margin: 0; display: grid; gap: 10px; }
   .skills div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; }
   .skills dt { font-size: 12px; color: var(--accent); }
@@ -109,6 +143,6 @@ const profiles = site.socials.filter((s) => s.label !== 'LinkedIn');
     :global(.nav), :global(footer), .print, .label { display: none !important; }
     .page { padding-top: 0; font-size: 12px; }
     section { break-inside: auto; }
-    .jobs > li { break-inside: avoid; }
+    .jobs > li, .research-writing { break-inside: avoid; }
   }
 </style>
